@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>湖南校招信息查询系统</title>
+	<meta name="keywords" content="湖南,校招,湖南校招，湖南校招查询，湖南校招查询系统,湖南科技大学,湖南科技大学校招,湖南科技大学校招查询,湖南科技大学校招查询系统,湘潭大学,湘潭大学校招,湘潭大学校招查询,湘潭大学校招查询系统,中南大学,中南大学校招,中南大学校招查询,中南大学校招查询系统,长沙理工大学,长沙理工大学校招,长沙理工大学校招查询,长沙理工大学校招查询系统,湖南师范大学,湖南师范大学校招,湖南师范大学校招查询,湖南师范大学校招查询系统,湖南大学,湖南大学校招,湖南大学校招查询,湖南大学校招查询系统,xiaozhao.liuxinglong.top">
+    <meta name="description" content="湖南,校招,湖南校招，湖南校招查询，湖南校招查询系统,湖南科技大学,湖南科技大学校招,湖南科技大学校招查询,湖南科技大学校招查询系统,湘潭大学,湘潭大学校招,湘潭大学校招查询,湘潭大学校招查询系统,中南大学,中南大学校招,中南大学校招查询,中南大学校招查询系统,长沙理工大学,长沙理工大学校招,长沙理工大学校招查询,长沙理工大学校招查询系统,湖南师范大学,湖南师范大学校招,湖南师范大学校招查询,湖南师范大学校招查询系统,湖南大学,湖南大学校招,湖南大学校招查询,湖南大学校招查询系统,xiaozhao.liuxinglong.top">
+	<script src="./layoutit_files/jquery.min.js"></script>
+	<link href="./layoutit_files/layoutit.css" rel="stylesheet">
+	<link href="./layoutit_files/bootstrap.min.css" rel="stylesheet">
+	<script src="./layoutit_files/bootstrap.min.js"></script>
+	<style>
+		.form-group{
+			margin-bottom: 10px;
+			margin-top: 10px;
+		}
+		.nav li{
+			height: 30px;
+		}
+		.nav li a{
+			padding-top: 5px;
+			padding-bottom: 5px;
+		}
+		label{
+			color:#fff;
+			margin-left: 5.5%;
+			margin-top: 5px;
+		}
+		th{
+			border-bottom-width: 0;
+		}
+		.pagination	li{
+			display: inline-block;
+			margin-left: 4px;
+		}	
+		.pagination	li a{
+			border-radius:4px;
+		}
+	</style>
+	<script>
+		function Search(page,flag){
+			$('.preloader').show();			
+			var page = Number(page);
+			var school = $('#school').val().trim();
+			var vocation = $('#vocation').val().trim();
+			if(vocation.indexOf('&')!=-1&&vocation.indexOf('|')!=-1){
+				alert("查询关键词中同时含有&和|");
+				$(".preloader").hide();
+			}else{
+				var time = $(".nav .active a").text();
+				if(time.indexOf('全部')!=-1){
+					time = 0;			
+				}else if(time.indexOf('今天')!=-1){				
+					var d = new Date();
+					var time = d.getFullYear()+"-"+((d.getMonth()+1)<10?"0":"")+(d.getMonth()+1)+"-"+(d.getDate()<10?"0":"")+d.getDate();													
+				}else{
+					var d = new Date();	
+					d.setTime(d.getTime()+1*24*60*60*1000);
+					var time = d.getFullYear()+"-"+((d.getMonth()+1)<10?"0":"")+(d.getMonth()+1)+"-"+(d.getDate()<10?"0":"")+d.getDate();												
+				}			
+				$.ajax({
+			        type: "POST",
+			        url: 'index.php',
+			        data: { school:school ,vocation:vocation,time:time,page:page,flag:flag},
+			        success: function (data) {
+			        	data = data.split(',');
+			        	$('tbody').html(data[0]);
+			        	$('.pagination').html(data[1]);
+			        	$('#vocation').attr("placeholder",data[2]);			             	
+			        	$('.preloader').hide();
+			        }
+			    });
+			}	
+		}
+		$(function(){
+			// 时间触发查询
+			$(".nav li").click(function(){
+				if($(this).attr("class")!="active"){
+					$(this).addClass("active").siblings().removeClass("active");
+					Search(1);
+				}	
+			});			
+			// 学校触发查询
+			$('select').change(function(){
+				Search(1);
+			});
+			// 点击页数			
+			$('.pagination').on('click','li',function (e) { 
+				var cl = $(this).attr("class");
+				if(cl!="disabled"&&cl!="active"){
+					var page = $(this).children("a").text();
+					if(page.indexOf('首页')!=-1){
+						page = -1;
+					}else if(page.indexOf('上一页')!=-1){
+						page = $('.pagination .active a').text();
+						page = Number(page);
+						page = page-1;
+					}else if(page.indexOf('下一页')!=-1){
+						page = $('.pagination .active a').text();
+						page = Number(page);
+						page = page+1;
+					}else if(page.indexOf('尾页')!=-1){
+						page = -2;
+					}
+					Search(page);
+				}	
+			});
+			Search(1,1);
+		});
+	</script>
+</head>
+<body>
+	<!-- 加载显示 -->
+	<div class="preloader" style="display:none;">
+	    <div class="sk-spinner sk-spinner-wordpress">
+	       <span class="sk-inner-circle"></span>
+	     </div>
+	</div>
+	<div class="container">
+	<div class="row clearfix">
+		<div class="alert alert-success alert-dismissable" style="margin-top: 20px;width: 100%;">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+			<strong>查询关键词:</strong>&nbsp;&nbsp;
+			1、如果多个关键词需同时满足，关键词之间用<strong style="color:#F00;">&nbsp;&&nbsp;</strong>隔开 &nbsp;&nbsp;
+			2、如果多个关键词仅需满足其一，关键词之间用<strong style="color:#F00;">&nbsp;|&nbsp;</strong>隔开&nbsp;&nbsp;
+			3、目前关键词中不支持同时含有<strong style="color:#F00;">&nbsp;&&nbsp;</strong>和<strong style="color:#F00;">&nbsp;|&nbsp;</strong>&nbsp;&nbsp;
+			4、无关键词时查询出所有招聘的信息、关键词中也可设计时间、公司等信息进行查询
+		</div>
+	</div>
+	<div class="navbar-fixed-top navbar-inverse">
+		<div class="form-group">					
+			<label class="col-sm-1">选择学校：</label>
+			<div class="col-sm-2">
+				<select type="text" class="form-control" id="school" name="school" placeholder="">
+					<option value="hnust">湖南科技大学</option>
+					<option value="hnu">湖南大学</option>
+					<option value="xtu">湘潭大学</option>
+					<option value="csu_1">中南大学本部</option>
+					<option value="csu_2">中南大学湘雅学院</option>
+					<option value="csu_3">中南大学铁道学院</option>
+					<option value="csust">长沙理工大学</option>
+					<option value="hunnu">湖南师范大学</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">					
+			<label class="col-sm-1">选择时间：</label>
+			<div class="col-sm-2">
+				<ul class="nav nav-pills">
+					<li class="active">
+						 <a href="javascript:volid(0);">全部</a>
+					</li>
+					<li>
+						 <a href="javascript:volid(0);">今天</a>
+					</li>
+					<li>
+						 <a href="javascript:volid(0);">明天</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="form-group">					
+			<label class="col-sm-1" style="margin-left: 3%;">查询关键词</label>
+			<div class="col-sm-2">
+				<input type="text" class="form-control" id="vocation" name="vocation" placeholder="">
+			</div>
+			<button type="button" class="btn btn-default" onclick="Search(1)">查找</button>
+		</div>	
+	</div>	
+	<h3 class="text-center" style="margin-top: 40px;margin-bottom: 20px;">
+		<strong>湖南校招信息查询系统</strong>
+	</h3>
+	<div class="row clearfix">
+		<div class="col-md-12 column" style="padding-top: 25px;margin-bottom: 0px;border-radius:0;">
+			<span class="label label-primary">宣讲会列表</span>
+			<table class="table" style="margin-top: 10px;">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>公司名称</th>
+						<th>举办时间</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>	
+		</div>
+		<div class="col-md-12 column" style="text-align:center;margin-top: 0px;padding: 15px 15px;border-radius:0;border-top-width: 0px;">
+			<ul class="pagination"></ul>
+		</div>
+	</div>
+</div>
+</body>
+</html>

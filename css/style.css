@@ -1,0 +1,63 @@
+@CHARSET "UTF-8";
+.col-sm-10{
+	margin-left: 2%;
+    width: 13%;
+}
+.form-horizontal .control-label{
+	width: 12%;
+}
+.form-control{/*150*/
+	width: 88%;
+}
+
+/* preloader section */
+.preloader {
+	position:fixed;
+	left: 0;
+	right:0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-flex-flow: row nowrap;
+	-ms-flex-flow: row nowrap;
+	flex-flow: row nowrap;
+	-webkit-justify-content: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	-webkit-align-items: center;
+	-ms-flex-align: center;
+	align-items: center;
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0.45);
+}
+.sk-spinner-wordpress.sk-spinner {
+	background-color: #36C;
+	width: 30px;
+	height: 30px;
+	border-radius: 30px;
+	position: relative;
+	-webkit-animation: sk-innerCircle 1s linear infinite;
+	        animation: sk-innerCircle 1s linear infinite; 
+}
+.sk-spinner-wordpress .sk-inner-circle {
+	display: block;
+	background-color: #fff;
+	width: 8px;
+	height: 8px;
+	position: absolute;
+	border-radius: 8px;
+	top: 5px;
+	left: 5px; 
+}
+@-webkit-keyframes sk-innerCircle {
+  0% {
+    -webkit-transform: rotate(0);
+            transform: rotate(0); 
+    }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+     } 
+ }

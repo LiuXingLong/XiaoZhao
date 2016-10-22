@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8>
+	<title>湖南科技大学校招信息查询系统</title>
+	<link rel="stylesheet" href="./css/bootstrap-combined.min.css">
+	<link rel="stylesheet" href="./css/style.css">
+	<script type="text/javascript" src="./js/jquery.min.js"></script>  
+</head>
+<script>
+	function Search(page){
+		$(".preloader").show();
+		var time = 0;
+		var page = Number(page);
+		var school = $('#school').val().trim();
+		var vocation = $('#vocation').val().trim();
+		$.ajax({
+	        type: "POST",
+	        url: 'index.php',
+	        data: { school:school ,vocation:vocation,time:time,page:page},
+	        success: function (data) {
+	        	data = data.split(',');
+	        	$('tbody').html(data[0]);
+	        	$('.pagination').html(data[1]);
+	        	$('#vocation').attr("placeholder",data[3]);
+	        	$(".preloader").hide();
+	        }
+	    });	
+	}
+</script>
+<body>
+<div class="col-md-12 column">	
+	<!-- 加载显示 -->
+	<div class="preloader" style="display:none;">
+	    <div class="sk-spinner sk-spinner-wordpress">
+	       <span class="sk-inner-circle"></span>
+	     </div>
+	</div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+		<h2 class="panel-title" style="float:left;margin-left: 10%">湖南科技大学校招信息查询系统</h2>		    
+	    <div class="form-horizontal" role="form" style="margin-top: 5px;width: 100%;height: 40px;">		
+			<div class="form-group">
+				<label for="firstname" class="col-sm-2 control-label">学校</label>
+				<div class="col-sm-10">
+					<select type="text" class="form-control" id="school" name="school" placeholder="">
+						<option value="hnust">湖南科技大学</option>
+						<option value="xtu">湘潭大学</option>
+						<option value="csu_1">中南大学本部</option>
+						<option value="csu_2">中南大学湘雅学院</option>
+						<option value="csu_3">中南大学铁道学院</option>
+						<option value="csust">长沙理工大学</option>
+						<option value="hunnu">湖南师范大学</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="lastname" class="col-sm-2 control-label">查询关键词</label>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" id="vocation" name="vocation" placeholder="">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10" style="width: 5%;">
+					<button type="button" class="btn btn-default" onclick="Search(1)">查找</button>
+					</div>
+				</div>
+			</div>	
+		</div>
+		<div class="panel-body">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>公司名称</th>
+						<th>举办时间</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>		
+	</div>
+</div>
+</body>
+</html>
